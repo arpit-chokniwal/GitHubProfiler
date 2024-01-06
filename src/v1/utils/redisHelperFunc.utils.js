@@ -7,8 +7,11 @@ const getRedisData = async (key) => {
 
 const setRedisData = async (key, value) => {
     const redisClient = await getRedisClient();
-    // 5 hours (18000 seconds)
-    await redisClient.set(key, value, 'EX', 18000);
+    await redisClient.set(key, value);
+
+    // 12 hours (18000 seconds)
+    await redisClient.expire(key, 24*60*60);
+    return { message: "successfully set key and value", status: 200 };
 }
 
 const deleteRedisData = async (key) => {

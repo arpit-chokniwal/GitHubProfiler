@@ -3,6 +3,7 @@ const {
   GITHUB_BASE_API_URL,
   GITHUB_CONTRIBUTIONS_API,
 } = require("./constants");
+const { getRedisData, setRedisData, deleteRedisData } = require("./redisHelperFunc.utils");
 
 async function getContributions(token, username) {
   const headers = {
@@ -226,15 +227,21 @@ function filterZeroCounts(data, key) {
 
 const getGitHubProfileInfo = async (username) => {
   try {
-    const { contributionResponse, userDetails } = await getContributions(
-      process.env.GITHUB_TOKEN,
-      username
-    );
-    const processGitHubData_ = processGitHubData(
-      userDetails.data,
-      contributionResponse
-    );
-    return processGitHubData_;
+    const userInRedis = await getRedisData(username)
+    if (userInRedis) {
+      return JSON.parse(userInRedis)
+    } else {
+      const { contributionResponse, userDetails } = await getContributions(
+        process.env.GITHUB_TOKEN,
+        username
+      );
+      const processGitHubData_ = processGitHubData(
+        userDetails.data,
+        contributionResponse
+      );
+      await setRedisData(username, JSON.stringify(processGitHubData_))
+      return processGitHubData_;
+    }
   } catch (error) {
     return;
   }
