@@ -1,0 +1,23 @@
+version: '3'
+services:
+  redisserver:
+    image: redis
+    ports:
+      - "6379:6379"
+    command:
+      - "redis-server"
+      - "--bind"
+      - "redisserver"
+      - "--port"
+      - "6379"
+
+  githubprofiler:
+    build: .
+    container_name: expertiachatbackend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_OPTIONS: "--max-old-space-size=2048"
+      # Define additional environment variables here
+      GITHUB_TOKEN: "ghp_githubtoken"
+
