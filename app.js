@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const v1Apis = require("./src/v1/router/public.routes");
+const { redisServer, getRedisClient } = require("./src/config/redis.config");
 
 app.use(cors());
 app.use(express.json());
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1", v1Apis);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await redisServer();
     console.log(`Server is running on port ${PORT}`);
 });
