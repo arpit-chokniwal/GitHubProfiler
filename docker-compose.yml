@@ -2,6 +2,7 @@ version: '3'
 services:
   redisserver:
     image: redis
+    container_name: redisserver
     ports:
       - "6379:6379"
     command:
@@ -12,12 +13,25 @@ services:
       - "6379"
 
   githubprofiler:
-    build: .
-    container_name: expertiachatbackend
+    depends_on:
+      - redisserver
+    build:
+      context: ./profiler
+    container_name: githubprofiler
     ports:
-      - "3000:3000"
+      - "8000:8000"
     environment:
-      NODE_OPTIONS: "--max-old-space-size=2048"
-      # Define additional environment variables here
-      GITHUB_TOKEN: "ghp_githubtoken"
+      PORT: 8000
+      GITHUB_TOKEN: ghp_token
+      REDIS_URL: redis://redisserver:6379
+      REDIS_PORT: 6379
 
+  nginx:
+    container_name: nginx
+    depends_on:
+      - githubprofiler
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
