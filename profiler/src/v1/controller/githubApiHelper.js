@@ -1,7 +1,7 @@
 const { default: axios } = require("axios");
 const { GITHUB_BASE_API_URL, GITHUB_CONTRIBUTIONS_API, GITHUB_TOKEN } = require("../../../constants");
 const { getRedisData, setRedisData } = require("../utils/redisHelperFunc.utils");
-const { processGitHubData } = require("../utils/helperfunction");
+const { processGitHubData } = require("../utils/helperFunction.utils");
 
 async function getGithubUserDetailAndContributions(token, username) {
     const headers = {
@@ -99,6 +99,6 @@ const getGitHubProfileInfo = async (username) => {
     }
 };
 
-module.exports= {
+module.exports = {
     getGitHubProfileInfo
 }

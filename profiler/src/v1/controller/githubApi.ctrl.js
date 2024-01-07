@@ -1,4 +1,4 @@
-const { successResponse, errorResponse } = require("../utils/helperfunction");
+const { successResponse, errorResponse } = require("../utils/helperFunction.utils");
 const { getGitHubProfileInfo } = require("./githubApiHelper");
 
 const homeRouter = (req, res) => {
