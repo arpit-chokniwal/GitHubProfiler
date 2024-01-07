@@ -3,7 +3,7 @@ const { GITHUB_BASE_API_URL, GITHUB_CONTRIBUTIONS_API, GITHUB_TOKEN } = require(
 const { getRedisData, setRedisData } = require("../utils/redisHelperFunc.utils");
 const { processGitHubData } = require("../utils/helperfunction");
 
-async function getContributions(token, username) {
+async function getGithubUserDetailAndContributions(token, username) {
     const headers = {
         Authorization: `bearer ${token}`,
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ const getGitHubProfileInfo = async (username) => {
         if (userInRedis) {
             return JSON.parse(userInRedis)
         } else {
-            const { contributionResponse, userDetails } = await getContributions(
+            const { contributionResponse, userDetails } = await getGithubUserDetailAndContributions(
                 GITHUB_TOKEN,
                 username
             );
